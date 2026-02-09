@@ -50,7 +50,9 @@ Download the appropriate binary from the `bin/` directory:
 ```
 moe                         Open with an empty buffer
 moe file.txt                Open file.txt for editing
+moe file.txt +100           Open file.txt at line 100
 moe file1.txt file2.txt     Open in split-screen with both files
+moe -view file.txt          Open in read-only view mode
 moe --version               Show version and build date
 moe --help                  Show usage information
 ```
@@ -84,6 +86,11 @@ moe has two ways to issue commands:
 | `Ctrl-G` then `e` | Jump to the **end** of the current function. Works with Go, C, Python, Bash, and JavaScript. |
 | `Ctrl-B` | Enter command mode. The status bar bumps up one row and a `:` command input line appears at the very bottom of the screen. |
 | `Ctrl-X` | Find the next occurrence of the current search pattern. Wraps around to the top of the file. |
+| `Ctrl-Y` | Undo the last edit action. Supports up to 20 levels of undo. |
+| `Ctrl-A` | Delete from cursor to end of line. |
+| `Shift+Ctrl-A` | Delete from cursor to beginning of line. |
+| `Ctrl-D` | Delete the current line. |
+| `Shift+Ctrl-D` | Delete the line above the current line. |
 
 ### Navigation Keys
 
@@ -94,6 +101,19 @@ moe has two ways to issue commands:
 | End | Move cursor to the end of the current line. |
 | Page Up | Scroll one full page up. |
 | Page Down | Scroll one full page down. |
+
+### Word & Line Navigation (Ctrl+Arrow)
+
+| Key | Action |
+|---|---|
+| Ctrl+Right | Jump to the beginning of the next word |
+| Ctrl+Left | Jump to the beginning of the previous word |
+| Ctrl+Down | Jump to the first word of the next line |
+| Ctrl+Up | Jump to the first word of the previous line |
+| Shift+Ctrl+Right | Jump to the end of the current/next word |
+| Shift+Ctrl+Left | Jump to the end of the previous word |
+| Shift+Ctrl+Down | Jump to the last word of the next line |
+| Shift+Ctrl+Up | Jump to the last word of the previous line |
 
 ### Quick Navigation (Escape prefix)
 
@@ -155,11 +175,11 @@ The clipboard is shared across both panes in split mode.
 
 ```
 1. Position cursor on the first line you want to copy.
-2. Press Ctrl-E, then V        ‚ current line is highlighted
-3. Press Down arrow 4 times    ‚ 5 lines are now highlighted
-4. Press Enter                 ‚ status bar shows "copy5 lines"
+2. Press Ctrl-E, then V        � current line is highlighted
+3. Press Down arrow 4 times    � 5 lines are now highlighted
+4. Press Enter                 � status bar shows "copy5 lines"
 5. Move cursor to the target location.
-6. Press Ctrl-E, then b        ‚ 5 lines are pasted below the cursor
+6. Press Ctrl-E, then b        � 5 lines are pasted below the cursor
 ```
 
 **Copy lines from one pane and paste into the other:**
@@ -167,26 +187,26 @@ The clipboard is shared across both panes in split mode.
 ```
 1. In the left pane, press Ctrl-E, then V
 2. Select lines with Up/Down, press Enter to copy
-3. Press Ctrl-P, then Right arrow  ‚ switch to right pane
+3. Press Ctrl-P, then Right arrow  � switch to right pane
 4. Navigate to the desired line.
-5. Press Ctrl-E, then a            ‚ lines are pasted above cursor
+5. Press Ctrl-E, then a            � lines are pasted above cursor
 ```
 
 **Uppercase a block of code:**
 
 ```
 1. Position cursor on the first line.
-2. Press Ctrl-E, then V        ‚ visual mode active
+2. Press Ctrl-E, then V        � visual mode active
 3. Select lines with Down arrow
-4. Press U                     ‚ all selected lines become UPPERCASE
+4. Press U                     � all selected lines become UPPERCASE
 ```
 
 **Lowercase a block of code:**
 
 ```
-1. Press Ctrl-E, then V        ‚ visual mode active
+1. Press Ctrl-E, then V        � visual mode active
 2. Select lines with Down arrow
-3. Press u                     ‚ all selected lines become lowercase
+3. Press u                     � all selected lines become lowercase
 ```
 
 ### Function Navigation (Ctrl-G prefix)
@@ -216,7 +236,7 @@ The status bar shows the target line number after the jump. If the cursor is not
 
 ```
 1. You are editing main.go, cursor is somewhere inside a function.
-2. Press Ctrl-G, then s         ‚ cursor jumps to the "func ..." line
+2. Press Ctrl-G, then s         � cursor jumps to the "func ..." line
 3. Status bar shows "Function start: line 42"
 ```
 
@@ -224,7 +244,7 @@ The status bar shows the target line number after the jump. If the cursor is not
 
 ```
 1. You are editing utils.c, cursor is inside a function body.
-2. Press Ctrl-G, then e         ‚ cursor jumps to the closing "}"
+2. Press Ctrl-G, then e         � cursor jumps to the closing "}"
 3. Status bar shows "Function end: line 87"
 ```
 
@@ -232,8 +252,8 @@ The status bar shows the target line number after the jump. If the cursor is not
 
 ```
 1. You are editing app.py, cursor is inside a "def process():" block.
-2. Press Ctrl-G, then s         ‚ cursor jumps to the "def process():" line
-3. Press Ctrl-G, then e         ‚ cursor jumps to the last indented line
+2. Press Ctrl-G, then s         � cursor jumps to the "def process():" line
+3. Press Ctrl-G, then e         � cursor jumps to the last indented line
                                   of that function body
 ```
 
@@ -265,18 +285,18 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 **Search for a pattern (case-sensitive):**
 
 ```
-1. Press Ctrl-B                ‚ status bar bumps up, ":" prompt appears
-2. Type /TODO                  ‚ press Enter
+1. Press Ctrl-B                � status bar bumps up, ":" prompt appears
+2. Type /TODO                  � press Enter
 3. Cursor jumps to first "TODO" match.
-4. Press Ctrl-X                ‚ jumps to the next match
-5. Press Ctrl-X again          ‚ wraps around to the top if needed
+4. Press Ctrl-X                � jumps to the next match
+5. Press Ctrl-X again          � wraps around to the top if needed
 ```
 
 **Search for a pattern (case-insensitive):**
 
 ```
 1. Press Ctrl-B
-2. Type \error                 ‚ press Enter
+2. Type \error                 � press Enter
 3. Matches "error", "Error", "ERROR", etc.
 ```
 
@@ -284,7 +304,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 
 ```
 1. Press Ctrl-B
-2. Type save/backup/myfile.txt ‚ press Enter
+2. Type save/backup/myfile.txt � press Enter
 3. Status bar shows "Saved: backup/myfile.txt"
 ```
 
@@ -292,7 +312,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 
 ```
 1. Press Ctrl-B
-2. Type grep -rni handleKey *.go  ‚ press Enter
+2. Type grep -rni handleKey *.go  � press Enter
 3. Overlay shows all matches with filenames and line numbers.
 4. Use Up/Down to browse results, Enter to open the file at that line.
 5. Press Escape to close the grep overlay.
@@ -302,7 +322,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 
 ```
 1. Press Ctrl-B
-2. Type ln                     ‚ press Enter
+2. Type ln                     � press Enter
 3. Line numbers appear in the left gutter.
 4. To turn off: Ctrl-B, type ln off, press Enter.
 ```
@@ -311,7 +331,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 
 ```
 1. Press Ctrl-B
-2. Type !ls -la                ‚ press Enter
+2. Type !ls -la                � press Enter
 3. An overlay appears showing the directory listing.
 4. Scroll with Up/Down or Page Up/Down, Escape to close.
 ```
@@ -321,7 +341,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 ```
 1. Position cursor where you want the output inserted.
 2. Press Ctrl-B
-3. Type insert !date           ‚ press Enter
+3. Type insert !date           � press Enter
 4. The current date/time is inserted below the cursor line.
 5. Status bar shows "Inserted 1 lines from: date"
 ```
@@ -330,7 +350,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 
 ```
 1. Press Ctrl-B
-2. Type insert !cat /etc/hostname   ‚ press Enter
+2. Type insert !cat /etc/hostname   � press Enter
 3. The contents of /etc/hostname are inserted at the cursor.
 ```
 
@@ -338,7 +358,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 
 ```
 1. Press Ctrl-B
-2. Type %hndlkey               ‚ press Enter
+2. Type %hndlkey               � press Enter
 3. Cursor jumps to the first line containing "h", "n", "d", "l", "k", "e", "y"
    in that order (e.g. "func handleKey(ev ..." matches).
 4. Press Ctrl-X to jump to the next fuzzy match (wraps around).
@@ -348,7 +368,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 
 ```
 1. Press Ctrl-B
-2. Type replace foo bar confirm    ‚ press Enter
+2. Type replace foo bar confirm    � press Enter
 3. Cursor jumps to first "foo", highlighted.
 4. Press y to replace with "bar", or n to skip.
 5. Repeats for each occurrence. Press Esc to stop early.
@@ -359,7 +379,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 
 ```
 1. Press Ctrl-B
-2. Type replace foo bar ALL        ‚ press Enter
+2. Type replace foo bar ALL        � press Enter
 3. All occurrences of "foo" are replaced with "bar" instantly.
 4. Status bar shows "12 replaced".
 ```
@@ -370,9 +390,9 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 1. Add 'set ai-apikey=sk-...' to ~/.config/moe/moe.cnf
 2. Open a file in moe.
 3. Press Ctrl-B
-4. Type ai                    ‚ press Enter
+4. Type ai                    � press Enter
 5. AI overlay opens with a prompt.
-6. Type: "Add error handling to this function" ‚ press Enter
+6. Type: "Add error handling to this function" � press Enter
 7. AI response appears in a scrollable overlay.
 8. Press 'a' to apply the code to your buffer, or Esc to close.
 ```
@@ -381,7 +401,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 
 ```
 1. Press Ctrl-B
-2. Type themes                 ‚ press Enter
+2. Type themes                 � press Enter
 3. A picker overlay appears with 6 themes.
 4. Use Up/Down to preview, Enter to select, Escape to cancel.
 ```
@@ -427,19 +447,19 @@ moe supports vertical split-screen editing with two independent buffers.
 When editing **Go** or **C** files (`.go`, `.c`, `.h`, `.cpp`, `.cc`, `.cxx`, `.hpp`), moe displays faint gray guide lines on the left edge of the editor. These guides show which `{` `}` brace pairs enclose the current cursor position:
 
 - **Multiple nesting levels** are shown simultaneously -- deeper scopes appear slightly brighter.
-- `‚` marks the line containing the opening `{`.
-- `‚` marks the line containing the closing `}`.
-- `‚` marks continuation lines between the braces.
+- `�` marks the line containing the opening `{`.
+- `�` marks the line containing the closing `}`.
+- `�` marks continuation lines between the braces.
 - Guides update automatically as you move the cursor or edit the buffer.
 - Up to 4 nesting levels are displayed to avoid consuming too much horizontal space.
 - Results are cached per buffer edit version for performance.
 
 ```
-‚ func main() {
-‚‚    if x > 0 {
-‚‚        doSomething()
-‚‚    }
-‚ }
+� func main() {
+��    if x > 0 {
+��        doSomething()
+��    }
+� }
 ```
 
 ## Marks
@@ -538,7 +558,7 @@ When `set statusbar=weather` is configured along with `set city=Milan`, moe will
 1. Wait 30 seconds after startup (to avoid slowing down the editor launch).
 2. Check for internet connectivity.
 3. If online, fetch the current temperature and weather from [wttr.in](https://wttr.in) for the configured city.
-4. Display the weather (e.g. `‚Ô +22¬C`) on the right side of the status bar.
+4. Display the weather (e.g. `�� +22�C`) on the right side of the status bar.
 
 You can combine both: `set statusbar=time,weather` shows both time and weather separated by `|`.
 
