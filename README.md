@@ -12,39 +12,14 @@ Go, C, js, Java files.
 - Syntax highlighting for Go, C, Python, Bash, and JavaScript
 - Vertical split-screen with two independent buffers
 - Built-in file browser overlay for navigating and opening files
-- Command mode for search, save-as, and help
-- Case-sensitive and case-insensitive search with wrap-around
-- Dark theme (with provision for additional themes)
-- Cross-platform: Linux (amd64, arm64), macOS (arm64), Windows (amd64)
-- Static binaries with no runtime dependencies
+- search and fuzzy search (when you don't remember the function names)
+- Themes 
+- AI integration with ChatGPT (requires API key)
+- undo buffers
+- braces scope visualization
+- function-related search, replace etc. 
 
-## Installation
 
-### Build from source
-
-Requires Go 1.22 or later.
-
-```bash
-# Simple build for your current platform
-go build -o moe .
-
-# Or cross-compile all platforms
-bash scripts/build.sh
-ls bin/
-```
-
-The `scripts/build.sh` script produces static binaries in the `bin/` directory with the version number in the filename (e.g. `moe-0.1.0-linux-amd64`). The version is read automatically from `main.go`.
-
-### Pre-built binaries
-
-Download the appropriate binary from the `bin/` directory:
-
-| Platform | Binary |
-|---|---|
-| Linux x86_64 | `moe-<version>-linux-amd64` |
-| Linux ARM64 | `moe-<version>-linux-arm64` |
-| macOS Apple Silicon | `moe-<version>-darwin-arm64` |
-| Windows x86_64 | `moe-<version>-windows-amd64.exe` |
 
 ## Usage
 
