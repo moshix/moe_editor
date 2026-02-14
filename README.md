@@ -2,7 +2,7 @@
 
 **moe** is a lightweight, fast terminal text editor written in Go. It runs on Linux and macOS and Windoz, adapts to the terminal window size, supports split-screen editing, syntax highlighting, and a built-in file browser. It also integrates with LLMs so you can do LLM work on terminal-based editor while connect to remote machines. 
 
-This is an editor developed the way my fingers and my thinking works. It's meant for fast editing of
+This is an editor developed the way my fingers and my thinking work. It's meant for fast editing of
 Go, C, js, Java files.
 
 ## Features
@@ -54,7 +54,7 @@ moe has two ways to issue commands:
 | `Ctrl-N` | Scroll half a page down. |
 | `Ctrl-U` | Scroll half a page up. |
 | `Ctrl-T` | Go to the top of the file (first line). |
-| `Ctrl-Z` | Go to the end of the file (last line). |
+| `Shift+Ctrl-T` | Go to the end of the file (last line). |
 | `Ctrl-E` then `V` | Enter visual line select mode. The current line is highlighted. Use Up/Down arrows to extend the selection. Press Enter (or `y`) to copy the selected lines to the clipboard. Press `U` to UPPERCASE selected lines. Press `u` to lowercase selected lines. Press Escape to cancel. |
 | `Ctrl-E` then `b` | Paste the clipboard contents **below** the current cursor line. |
 | `Ctrl-E` then `a` | Paste the clipboard contents **above** the current cursor line. |
@@ -62,11 +62,15 @@ moe has two ways to issue commands:
 | `Ctrl-G` then `e` | Jump to the **end** of the current function. Works with Go, C, Python, Bash, and JavaScript. |
 | `Ctrl-B` | Enter command mode. The status bar bumps up one row and a `:` command input line appears at the very bottom of the screen. |
 | `Ctrl-X` | Find the next occurrence of the current search pattern. Wraps around to the top of the file. |
-| `Ctrl-Y` | Undo the last edit action. Supports up to 20 levels of undo. |
-| `Ctrl-A` | Delete from cursor to end of line. |
-| `Shift+Ctrl-A` | Delete from cursor to beginning of line. |
+| `Shift+Ctrl-X` | Find the previous occurrence of the current search pattern. Wraps around to the bottom of the file. |
 | `Ctrl-D` | Delete the current line. |
 | `Shift+Ctrl-D` | Delete the line above the current line. |
+| `Ctrl-A` | Delete from cursor to end of line. |
+| `Shift+Ctrl-A` | Delete from cursor to beginning of line. |
+| `Ctrl-L` | Delete the current word under the cursor. |
+| `Ctrl-O` | Delete the character under the cursor. |
+| `Ctrl-K` | Start character-level visual select. Move cursor to extend selection, `Ctrl-D` to delete, Enter to copy, Escape to cancel. |
+| `Ctrl-Y` | Undo the last edit action. Supports up to 20 levels of undo. |
 
 ### Navigation Keys
 
@@ -239,15 +243,17 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 
 | Command | Action |
 |---|---|
-| `/pattern` | Search forward for "pattern" (case-sensitive). The cursor moves to the first match. Use `Ctrl-X` to find subsequent matches. |
-| `\pattern` | Search forward for "pattern" (case-insensitive). The cursor moves to the first match. Use `Ctrl-X` to find subsequent matches. |
+| `/pattern` | Search forward for "pattern" (case-sensitive). The cursor moves to the first match. Use `Ctrl-X` to find subsequent matches, `Shift+Ctrl-X` to find previous matches. |
+| `\pattern` | Search forward for "pattern" (case-insensitive). The cursor moves to the first match. Use `Ctrl-X` to find subsequent matches, `Shift+Ctrl-X` to find previous matches. |
 | `save/filename` | Save the current buffer to the given filename. The buffer's filename is updated to the new name. Example: `save/backup.txt` |
 | `!command` | Run a local shell command and show its output in an overlay window. Use arrow keys to scroll, Escape to close. Example: `!ls -la` |
 | `insert !command` | Run a local shell command and insert its output into the current buffer at the cursor position. Example: `insert !date` |
 | `grep pattern files` | Run grep and show results in an overlay window. Supports standard grep flags. Examples: `grep TODO *.go`, `grep -rni error *`. Use arrow keys to navigate results, Enter to open the file at that match, Escape to close. |
-| `%pattern` | Fuzzy search in the current buffer. Matches lines where all characters of "pattern" appear in order (not necessarily contiguous). Jumps directly to the first matching line, just like `/` and `\`. Use `Ctrl-X` to cycle to the next match (wraps around). |
+| `%pattern` | Fuzzy search in the current buffer. Matches lines where all characters of "pattern" appear in order (not necessarily contiguous). Jumps directly to the first matching line, just like `/` and `\`. Use `Ctrl-X` to cycle to the next match, `Shift+Ctrl-X` for the previous match (wraps around). |
 | `replace X Y confirm` | Find all occurrences of X and confirm each replacement with Y. Press `y` to replace, `n` to skip, `Esc` to stop. The current match is highlighted. Status bar shows the running count. |
 | `replace X Y ALL` | Replace all occurrences of X with Y without confirmation. `ALL` must be uppercase. Status bar shows total replaced. |
+| `delete-buffer` | Delete the entire contents of the active pane's buffer and place the cursor at the top of the screen. Only affects the current pane. The buffer is marked as modified. Undoable with `Ctrl-Y`. |
+| `reset-virgin` | Reload the buffer from disk, discarding all changes and undo history. The buffer is restored to its original on-disk state. Cursor moves to the top. Not undoable. |
 | `ai` | Open the AI assistant overlay. Requires `set ai-apikey=sk-...` in config. Type a query about the current file, Enter to send to ChatGPT (gpt-4o). Response is scrollable. Press `a` to apply code blocks to the buffer. |
 | `ln` | Show line numbers in the left gutter of the current pane. Also accepts `linenumbers` or `line`. |
 | `ln off` | Hide line numbers. Also accepts `linenumbers off` or `line off`. |
@@ -266,6 +272,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 3. Cursor jumps to first "TODO" match.
 4. Press Ctrl-X                � jumps to the next match
 5. Press Ctrl-X again          � wraps around to the top if needed
+6. Press Shift+Ctrl-X          � jumps to the previous match
 ```
 
 **Search for a pattern (case-insensitive):**
@@ -338,6 +345,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 3. Cursor jumps to the first line containing "h", "n", "d", "l", "k", "e", "y"
    in that order (e.g. "func handleKey(ev ..." matches).
 4. Press Ctrl-X to jump to the next fuzzy match (wraps around).
+5. Press Shift+Ctrl-X to jump to the previous fuzzy match.
 ```
 
 **Replace with confirmation:**
@@ -489,7 +497,7 @@ The default dark theme uses a Catppuccin-inspired color palette with distinct co
 
 ## Themes
 
-moe ships with 4 built-in themes:
+moe ships with 6 built-in themes:
 
 | Theme | Description |
 |---|---|
@@ -497,6 +505,8 @@ moe ships with 4 built-in themes:
 | `solarized-dark` | Solarized Dark -- warm muted tones on a dark blue-green background. |
 | `monokai` | Monokai -- vibrant colors on a near-black background, popular in Sublime Text. |
 | `gruvbox` | Gruvbox Dark -- retro-groove palette with warm earthy tones. |
+| `nord` | Nord -- arctic, north-bluish color palette with cool tones. |
+| `dracula` | Dracula -- dark theme with vibrant purples, pinks, and greens. |
 
 To switch themes at runtime, press `Ctrl-B` to enter command mode, then type `themes` and press Enter. A theme picker overlay appears where you can navigate with the arrow keys and press Enter to select a theme. The change takes effect immediately. An asterisk (`*`) marks the currently active theme.
 
@@ -519,7 +529,7 @@ set statusbar=time,weather
 
 | Setting | Values | Default | Description |
 |---|---|---|---|
-| `theme` | `dark`, `solarized-dark`, `monokai`, `gruvbox` | `dark` | Color theme |
+| `theme` | `dark`, `solarized-dark`, `monokai`, `gruvbox`, `nord`, `dracula` | `dark` | Color theme |
 | `linenumbers` | `on`, `off` | `off` | Show line numbers in the gutter |
 | `city` | Any city name (e.g. `Milan`, `New York`, `Tokyo`) | *(none)* | City used for weather lookups via [wttr.in](https://wttr.in) |
 | `statusbar` | Comma-separated: `time`, `weather` | *(none)* | Extra information to show on the right side of the status bar |
