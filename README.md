@@ -3,7 +3,7 @@
 **moe** is a lightweight, fast terminal text editor written in Go. It runs on Linux and macOS and Windoz, adapts to the terminal window size, supports split-screen editing, syntax highlighting, and a built-in file browser. It also integrates with LLMs so you can do LLM work on terminal-based editor while connect to remote machines. 
 
 This is an editor developed the way my fingers and my thinking work. It's meant for fast editing of
-Go, C, js, Java, JCL, PL/I files.
+Go, C, js, Java files.
 
 ## Features
 
@@ -46,7 +46,7 @@ moe has two ways to issue commands:
 |---|---|
 | `Ctrl-Q` | Quit the editor. If the file has unsaved changes, moe prompts "File changed. Save? (y/n/c)" in the status bar. Press `y` to save and quit, `n` to quit without saving, or `c` to cancel. |
 | `Ctrl-S` | Save the current file. If no filename was given (new file), moe prompts "Save as:" in the status bar where you type the filename and press Enter. |
-| `Ctrl-F` | Open the file browser overlay. Navigate the local directory tree to select a file to open in the current buffer. |
+| `Ctrl-F` | Open the file browser overlay. Navigate the local directory tree to select a file to open in the current buffer. If the current buffer has unsaved changes, moe prompts "File changed. Save? (y/n/c)" before loading the new file. |
 | `Ctrl-V` | Split the screen vertically into two panes. |
 | `Ctrl-W` | Close the active pane. If the buffer has unsaved changes, prompts "Pane changed. Save? (y/n/c)" in the status bar. In single-pane mode, behaves like `Ctrl-Q`. |
 | `Ctrl-P` then `Left` | Switch to the left pane (split mode only). Press `Ctrl-P`, then immediately press the Left arrow key. |
@@ -55,6 +55,8 @@ moe has two ways to issue commands:
 | `Ctrl-U` | Scroll half a page up. |
 | `Ctrl-T` | Go to the top of the file (first line). |
 | `Shift+Ctrl-T` | Go to the end of the file (last line). |
+| `Ctrl-1` | Jump to the first line of the buffer. |
+| `Ctrl-0` | Jump to the last line of the buffer. |
 | `Ctrl-E` then `V` | Enter visual line select mode. The current line is highlighted. Use Up/Down arrows to extend the selection. Press Enter (or `y`) to copy the selected lines to the clipboard. Press `U` to UPPERCASE selected lines. Press `u` to lowercase selected lines. Press Escape to cancel. |
 | `Ctrl-E` then `b` | Paste the clipboard contents **below** the current cursor line. |
 | `Ctrl-E` then `a` | Paste the clipboard contents **above** the current cursor line. |
@@ -257,6 +259,13 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 | `ai` | Open the AI assistant overlay. Requires `set ai-apikey=sk-...` in config. Type a query about the current file, Enter to send to ChatGPT (gpt-4o). Response is scrollable. Press `a` to apply code blocks to the buffer. |
 | `ln` | Show line numbers in the left gutter of the current pane. Also accepts `linenumbers` or `line`. |
 | `ln off` | Hide line numbers. Also accepts `linenumbers off` or `line off`. |
+| `scope` | Toggle brace/function scope guide lines (Go/C files). |
+| `scope off` | Hide scope guide lines. |
+| `scope on` | Show scope guide lines. |
+| `trim` | Remove trailing spaces and tabs from all lines in the current buffer. |
+| `hex` | Toggle hex display for the current line. When on, the line under the cursor is shown as hex bytes (e.g. `48 65 6c 6c 6f`) instead of text. |
+| `hex off` | Show the current line as normal text. |
+| `hex on` | Show the current line in hex. |
 | `themes` | Open the theme picker overlay. Use arrow keys to select a theme, Enter to apply, Escape to cancel. |
 | `help` | Display the built-in help page with all commands. Press Enter or Escape to close the help page. |
 | Escape | Cancel command mode and return to normal editing. |
@@ -437,6 +446,7 @@ When editing **Go** or **C** files (`.go`, `.c`, `.h`, `.cpp`, `.cc`, `.cxx`, `.
 - Guides update automatically as you move the cursor or edit the buffer.
 - Up to 4 nesting levels are displayed to avoid consuming too much horizontal space.
 - Results are cached per buffer edit version for performance.
+- To turn scope guides off or on: press `Ctrl-B`, type `scope off` or `scope on`, then Enter. Type `scope` alone to toggle.
 
 ```
 � func main() {
