@@ -252,6 +252,7 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 | `insert !command` | Run a local shell command and insert its output into the current buffer at the cursor position. Example: `insert !date` |
 | `grep pattern files` | Run grep and show results in an overlay window. Supports standard grep flags. Examples: `grep TODO *.go`, `grep -rni error *`. Use arrow keys to navigate results, Enter to open the file at that match, Escape to close. |
 | `%pattern` | Fuzzy search in the current buffer. Matches lines where all characters of "pattern" appear in order (not necessarily contiguous). Jumps directly to the first matching line, just like `/` and `\`. Use `Ctrl-X` to cycle to the next match, `Shift+Ctrl-X` for the previous match (wraps around). |
+| `:N` | Jump to line N. Type `:nnn` and press Enter (e.g. `:123`) to move the cursor to that line. |
 | `replace X Y confirm` | Find all occurrences of X and confirm each replacement with Y. Press `y` to replace, `n` to skip, `Esc` to stop. The current match is highlighted. Status bar shows the running count. |
 | `replace X Y ALL` | Replace all occurrences of X with Y without confirmation. `ALL` must be uppercase. Status bar shows total replaced. |
 | `delete-buffer` | Delete the entire contents of the active pane's buffer and place the cursor at the top of the screen. Only affects the current pane. The buffer is marked as modified. Undoable with `Ctrl-Y`. |
