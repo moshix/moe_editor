@@ -58,6 +58,7 @@ moe has two ways to issue commands:
 | `Ctrl-1` | Jump to the first line of the buffer. |
 | `Ctrl-0` | Jump to the last line of the buffer. |
 | `Ctrl-E` then `V` | Enter visual line select mode. The current line is highlighted. Use Up/Down arrows to extend the selection. Press Enter (or `y`) to copy the selected lines to the clipboard. Press `U` to UPPERCASE selected lines. Press `u` to lowercase selected lines. Press Escape to cancel. |
+| `Ctrl-E` then `B` | Enter rectangular block select mode. Move cursor to form a block. Press Enter to copy, Ctrl-D to delete, Escape to cancel. Use Ctrl-E a/b to paste. |
 | `Ctrl-E` then `b` | Paste the clipboard contents **below** the current cursor line. |
 | `Ctrl-E` then `a` | Paste the clipboard contents **above** the current cursor line. |
 | `Ctrl-G` then `s` | Jump to the **start** of the current function. Works with Go, C, Python, Bash, and JavaScript. |
@@ -142,8 +143,8 @@ Esc o       Insert a new empty line below the current line.
 
 moe supports visual line selection for copying multiple lines and pasting them anywhere, including across panes.
 
-1. Press `Ctrl-E` then `V` (capital V) to enter **visual line select** mode. The current line is highlighted.
-2. Move Up/Down with the arrow keys (or Page Up/Down) to extend the selection. The status bar shows the number of selected lines.
+1. Press `Ctrl-E` then `V` (capital V) to enter **visual line select** mode. The current line is highlighted. Or press `Ctrl-E` then `B` (capital B) to enter **rectangular block select** mode.
+2. Move Up/Down (and Left/Right for block mode) with the arrow keys to extend the selection. The status bar shows the selection size.
 3. Press **Enter** (or `y`) to copy the selected lines to the clipboard. The status bar shows "copyN lines".
 4. Or press **U** to convert the selected lines to UPPERCASE, or **u** to convert to lowercase. The selection exits after the transformation.
 5. Navigate to any position in any pane, then press `Ctrl-E` then `b` to paste **below** the current line, or `Ctrl-E` then `a` to paste **above** the current line.
@@ -594,22 +595,6 @@ moe/
   bin/              Build output directory
 ```
 
-## Building
-
-### Quick build (current platform)
-
-```bash
-go build -o moe .
-```
-
-### Release build (all platforms)
-
-```bash
-bash scripts/build.sh
-```
-
-This produces statically linked binaries in `bin/` with names like `moe-0.1.0-linux-amd64`. The version is extracted from the `Version` variable in `main.go`.
-
 ## Version
 
 Check the current version:
@@ -618,11 +603,6 @@ Check the current version:
 ./moe --version
 ```
 
-To change the version, edit the `Version` variable in `main.go`:
-
-```go
-var Version = "0.1.0"
-```
 
 ## License
 
