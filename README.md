@@ -57,7 +57,7 @@ moe has two ways to issue commands:
 | `Shift+Ctrl-T` | Go to the end of the file (last line). |
 | `Ctrl-1` | Jump to the first line of the buffer. |
 | `Ctrl-0` | Jump to the last line of the buffer. |
-| `Ctrl-E` then `V` | Enter visual line select mode. The current line is highlighted. Use Up/Down arrows to extend the selection. Press Enter (or `y`) to copy the selected lines to the clipboard. Press `U` to UPPERCASE selected lines. Press `u` to lowercase selected lines. Press Escape to cancel. |
+| `Ctrl-E` then `V` | Enter visual line select mode. The current line is highlighted. Use Up/Down arrows to extend the selection. Press Enter (or `y`) to copy the selected lines to the clipboard. Press `U` to UPPERCASE selected lines. Press `u` to lowercase selected lines. Press `I` to enter multi-line prefix insert (type text + Enter to prepend to every selected line). Press `A` to enter multi-line suffix append (type text + Enter to append to every selected line). Press Escape to cancel. |
 | `Ctrl-E` then `B` | Enter rectangular block select mode. Move cursor to form a block. Press Enter to copy, Ctrl-D to delete, Escape to cancel. Use Ctrl-E a/b to paste. |
 | `Ctrl-E` then `b` | Paste the clipboard contents **below** the current cursor line. |
 | `Ctrl-E` then `a` | Paste the clipboard contents **above** the current cursor line. |
@@ -147,8 +147,10 @@ moe supports visual line selection for copying multiple lines and pasting them a
 2. Move Up/Down (and Left/Right for block mode) with the arrow keys to extend the selection. The status bar shows the selection size.
 3. Press **Enter** (or `y`) to copy the selected lines to the clipboard. The status bar shows "copyN lines".
 4. Or press **U** to convert the selected lines to UPPERCASE, or **u** to convert to lowercase. The selection exits after the transformation.
-5. Navigate to any position in any pane, then press `Ctrl-E` then `b` to paste **below** the current line, or `Ctrl-E` then `a` to paste **above** the current line.
-6. Press **Escape** at any time during visual selection to cancel without copying.
+5. Or press **I** to enter **multi-line prefix insert** mode — type any text and press Enter to prepend it to the start of every selected line.
+6. Or press **A** to enter **multi-line suffix append** mode — type any text and press Enter to append it to the end of every selected line.
+7. Navigate to any position in any pane, then press `Ctrl-E` then `b` to paste **below** the current line, or `Ctrl-E` then `a` to paste **above** the current line.
+8. Press **Escape** at any time during visual selection (or multi-insert) to cancel.
 
 The clipboard is shared across both panes in split mode.
 
@@ -187,9 +189,37 @@ The clipboard is shared across both panes in split mode.
 **Lowercase a block of code:**
 
 ```
-1. Press Ctrl-E, then V        � visual mode active
+1. Press Ctrl-E, then V        → visual mode active
 2. Select lines with Down arrow
-3. Press u                     � all selected lines become lowercase
+3. Press u                     → all selected lines become lowercase
+```
+
+**Comment out 4 lines (prefix insert):**
+
+```
+1. Position cursor on the first line to comment.
+2. Press Ctrl-E, then V        → visual mode active, line highlighted
+3. Press Down arrow 3 times    → 4 lines highlighted
+4. Press I                     → status bar: "Prefix insert (4 lines): |"
+5. Type "// "                  → status bar: "Prefix insert (4 lines): // |"
+6. Press Enter                 → "// " prepended to all 4 lines
+```
+
+**Add a trailing comment to several lines (suffix append):**
+
+```
+1. Press Ctrl-E, then V        → visual mode active
+2. Select lines with Down arrow
+3. Press A                     → status bar: "Suffix append (N lines): |"
+4. Type "  // TODO"            → status bar: "Suffix append (N lines):   // TODO|"
+5. Press Enter                 → "  // TODO" appended to every selected line
+```
+
+**Cancel mid-way:**
+
+```
+While typing in prefix/suffix mode, press Esc → "Multi-insert cancelled"
+The buffer is unchanged.
 ```
 
 ### Function Navigation (Ctrl-G prefix)
