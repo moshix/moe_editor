@@ -17,7 +17,8 @@ Go, C, js, Java files.
 - AI integration with ChatGPT (requires API key)
 - undo buffers
 - braces scope visualization
-- function-related search, replace etc. 
+- function-related search, replace etc.
+- user-defined key-bindings
 
 
 
