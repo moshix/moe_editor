@@ -1,0 +1,102 @@
+" moe editor key bindings (revised for mnemonics & discoverability)
+" Copy this file to ~/.config/moe/bindings.cnf to customize
+"
+" Format: bind <key> = <action>
+" Lines starting with " are comments
+"
+" Design principles:
+"   1. Letters match their action (S=save, F=find, Z=undo, etc.)
+"   2. Shift+Ctrl = opposite/extended variant of the Ctrl version
+"   3. Deletion keys grouped under K (kill) and L (line) families
+"   4. Universal shortcuts respected (ctrl-z=undo, ctrl-f=find)
+"
+" Available modifiers: ctrl, shift, alt (combine with -)
+"
+" Available keys:
+"   a-z                    Letters (use with ctrl- or shift-ctrl-)
+"   0-9                    Digits (use with ctrl-)
+"   up, down, left, right  Arrow keys
+"   home, end              Home / End
+"   pgup, pgdn             Page Up / Page Down
+"   enter, tab             Enter / Tab
+"   backspace, delete      Backspace / Delete
+"   escape                 Escape
+
+" ── File & Session ──────────────────────────────────
+"   s = Save,  q = Quit,  o = Open (file browser),  b = command Bar
+bind ctrl-s = save
+bind ctrl-q = quit
+bind ctrl-o = file-browser
+bind ctrl-b = command-mode
+
+" ── Panes ───────────────────────────────────────────
+"   2 = split into Two panes,  w = close Window,  p = switch Pane
+bind ctrl-2 = split
+bind ctrl-w = close-pane
+bind ctrl-p = pane-switch
+
+" ── Search ──────────────────────────────────────────
+"   f = Find next,  shift-f = Find previous
+bind ctrl-f = find-next
+bind shift-ctrl-f = find-prev
+
+" ── Scrolling & Jump ────────────────────────────────
+"   d = Down half-page,  u = Up half-page
+"   t = jump to Top,  shift-t = jump to bottom (end)
+bind ctrl-d = scroll-half-down
+bind ctrl-u = scroll-half-up
+bind ctrl-t = goto-top
+bind shift-ctrl-t = goto-end
+
+" ── Selection & Prefixes ──────────────────────────────
+"   v = Visual select,  e = Edit prefix,  g = Go-to-function prefix
+bind ctrl-v = visual-char-start
+bind ctrl-e = edit-prefix
+bind ctrl-g = func-prefix
+
+" ── Cursor Navigation ──────────────────────────────
+bind up = cursor-up
+bind down = cursor-down
+bind left = cursor-left
+bind right = cursor-right
+bind home = home
+bind end = end
+bind pgup = page-up
+bind pgdn = page-down
+
+" ── Word & Line-Start Navigation (Ctrl+Arrow) ─────
+bind ctrl-right = word-forward
+bind ctrl-left = word-backward
+bind ctrl-down = line-start-down
+bind ctrl-up = line-start-up
+
+" ── Word-End & Line-End Navigation (Shift+Ctrl+Arrow)
+bind shift-ctrl-right = word-end-forward
+bind shift-ctrl-left = word-end-backward
+bind shift-ctrl-down = line-end-down
+bind shift-ctrl-up = line-end-up
+
+" ── Deletion ────────────────────────────────────────
+"   k = Kill to end of line (emacs convention)
+"   shift-k = kill to start of line (opposite)
+"   l = delete Line,  shift-l = delete line above (opposite)
+"   x = cut char or selection,  alt-d = Delete word forward (emacs)
+bind ctrl-k = delete-to-line-end
+bind shift-ctrl-k = delete-to-line-start
+bind ctrl-l = delete-line
+bind shift-ctrl-l = delete-line-above
+bind ctrl-x = delete-char-or-selection
+bind alt-d = delete-word-forward
+
+" ── Editing ─────────────────────────────────────────
+"   z = undo (universal convention)
+bind ctrl-z = undo
+bind enter = insert-newline
+bind tab = insert-tab
+bind backspace = delete-back
+bind delete = delete-forward
+
+" ── Jump to Extremes ────────────────────────────────
+"   ctrl-home/end = first/last line (universal convention)
+bind ctrl-home = goto-first-line
+bind ctrl-end = goto-last-line
