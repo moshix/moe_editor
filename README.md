@@ -17,8 +17,7 @@ Go, C, js, Java files.
 - AI integration with ChatGPT (requires API key)
 - undo buffers
 - braces scope visualization
-- function-related search, replace etc.
-- user-defined key-bindings
+- function-related search, replace etc. 
 
 
 
@@ -289,7 +288,8 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 | `replace X Y ALL` | Replace all occurrences of X with Y without confirmation. `ALL` must be uppercase. Status bar shows total replaced. |
 | `delete-buffer` | Delete the entire contents of the active pane's buffer and place the cursor at the top of the screen. Only affects the current pane. The buffer is marked as modified. Undoable with `Ctrl-Y`. |
 | `reset-virgin` | Reload the buffer from disk, discarding all changes and undo history. The buffer is restored to its original on-disk state. Cursor moves to the top. Not undoable. |
-| `ai` | Open the AI assistant overlay. Requires `set ai-apikey=sk-...` in config. Type a query about the current file, Enter to send to ChatGPT (gpt-4o). Response is scrollable. Press `a` to apply code blocks to the buffer. |
+| `ai` | Open the AI assistant overlay **with file context**. The current file content (or visually selected lines) is sent along with your query to ChatGPT (gpt-4o). Requires `set ai-apikey=sk-...` in config. See **AI Assistant** section below for full details. |
+| `ai-query` | Open the AI assistant overlay **without file context**. No file content is sent -- use this for general questions, documentation lookups, or anything not related to the current file. See **AI Assistant** section below for full details. |
 | `ln` | Show line numbers in the left gutter of the current pane. Also accepts `linenumbers` or `line`. |
 | `ln off` | Hide line numbers. Also accepts `linenumbers off` or `line off`. |
 | `scope` | Toggle brace/function scope guide lines (Go/C files). |
@@ -410,17 +410,43 @@ Press `Ctrl-B` to open the command input line. The status bar bumps up one row a
 4. Status bar shows "12 replaced".
 ```
 
-**Ask the AI assistant about your code:**
+**Ask the AI assistant about your code (with file context):**
 
 ```
 1. Add 'set ai-apikey=sk-...' to ~/.config/moe/moe.cnf
 2. Open a file in moe.
 3. Press Ctrl-B
-4. Type ai                    � press Enter
-5. AI overlay opens with a prompt.
-6. Type: "Add error handling to this function" � press Enter
+4. Type ai                    → press Enter
+5. AI overlay opens with a prompt. Your file content is sent as context.
+6. Type: "Add error handling to this function" → press Enter
 7. AI response appears in a scrollable overlay.
-8. Press 'a' to apply the code to your buffer, or Esc to close.
+8. Press 'a' to apply the largest code block to your buffer.
+9. Press 'r' to refine -- ask a follow-up question while keeping
+   the full conversation history.
+10. Press Esc to close.
+```
+
+**Ask the AI a general question (no file context):**
+
+```
+1. Press Ctrl-B
+2. Type ai-query              → press Enter
+3. AI overlay opens. No file content is sent.
+4. Type: "What does O_NONBLOCK do?" → press Enter
+5. Response appears in a scrollable overlay.
+6. Press 'r' to ask a follow-up, or Esc to close.
+```
+
+**Use AI on a specific selection:**
+
+```
+1. Press Ctrl-E, then V       → visual line select mode
+2. Select the lines you want the AI to work on
+3. Press Ctrl-B, type ai      → press Enter
+4. Only the selected lines are sent as context (not the full file).
+5. Type your query and press Enter.
+6. Press 'a' to apply -- the selected lines are replaced with the
+   AI's code output.
 ```
 
 **Switch themes:**
@@ -445,6 +471,74 @@ Press `Ctrl-F` to open the file browser as a centered overlay on the screen. The
 | Escape | Close the file browser without selecting a file. |
 
 Directories are listed first (sorted alphabetically), then files (sorted alphabetically). Hidden files (names starting with `.`) are not shown.
+
+## AI Assistant
+
+moe integrates with ChatGPT (gpt-4o) for code assistance directly inside the editor. The AI overlay supports multi-turn conversations so you can refine your requests without losing context.
+
+### Setup
+
+Add your OpenAI API key to `~/.config/moe/moe.cnf`:
+
+```
+set ai-apikey=sk-...
+```
+
+### Two modes
+
+| Command | Context sent | Best for |
+|---|---|---|
+| `ai` | Current file content (or visually selected lines) | Code editing, refactoring, explaining code in context |
+| `ai-query` | None | General questions, documentation lookups, language syntax |
+
+Both are accessed via command mode (`Ctrl-B`).
+
+### AI overlay keys
+
+**While typing your query (input phase):**
+
+| Key | Action |
+|---|---|
+| Enter | Send the query to ChatGPT |
+| Arrow keys | Navigate within the input text |
+| Ctrl-Up / Ctrl-Down | Multi-line input navigation |
+| Escape (press twice) | Close the AI overlay |
+
+**While viewing the response:**
+
+| Key | Action |
+|---|---|
+| `r` | **Refine** -- return to the input phase with the full conversation history preserved. Ask a follow-up question and the AI will have context from all prior exchanges. |
+| `a` | **Apply** -- insert the largest code block from the response into the buffer. If you opened AI with a visual selection, the selected lines are replaced; otherwise the code is inserted at the cursor. |
+| Up / Down | Scroll the response |
+| Page Up / Page Down | Scroll faster |
+| Escape | Close the AI overlay |
+
+### Keeping a dialog going (AI mode with context)
+
+The key to a multi-turn AI conversation is the **refine** feature (`r` key):
+
+1. Open the AI overlay (`Ctrl-B ai` or `Ctrl-B ai-query`).
+2. Type your first question and press Enter. The AI responds.
+3. Press `r` to refine. The prompt reappears, but the conversation history is preserved.
+4. Type a follow-up question (e.g., "Now add error handling" or "Make it concurrent"). Press Enter.
+5. The AI sees the entire conversation -- your original question, its first answer, and your follow-up -- and responds in context.
+6. Repeat step 3-5 as many times as needed. Each round adds to the history.
+7. Press `a` at any point to apply the latest code block, or Escape to close.
+
+This lets you iteratively build up a solution without re-explaining the problem each time.
+
+### Using AI with visual selection
+
+You can narrow the AI's focus to specific lines:
+
+1. Press `Ctrl-E V` to enter visual line select mode.
+2. Select the lines you want the AI to work on.
+3. Press `Ctrl-B`, type `ai`, press Enter.
+4. Only the selected lines are sent as context (not the entire file).
+5. When you press `a` to apply, the selected lines are replaced with the AI's output.
+
+This is useful for targeted refactoring -- select a function, ask the AI to optimize it, and apply the result directly.
 
 ## Split Screen
 
