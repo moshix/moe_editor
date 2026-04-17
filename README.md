@@ -74,6 +74,7 @@ moe has two ways to issue commands:
 | `Ctrl-O` | Delete the character under the cursor. |
 | `Ctrl-K` | Start character-level visual select. Move cursor to extend selection, `Ctrl-D` to delete, Enter to copy, Escape to cancel. |
 | `Ctrl-Y` | Undo the last edit action. Supports up to 20 levels of undo. |
+| `Ctrl-R` | Redo the last undo action. |
 
 ### Navigation Keys
 
