@@ -54,8 +54,6 @@ moe has two ways to issue commands:
 | `Ctrl-P` then `Right` | Switch to the right pane (split mode only). Press `Ctrl-P`, then immediately press the Right arrow key. |
 | `Ctrl-N` | Scroll half a page down. |
 | `Ctrl-U` | Scroll half a page up. |
-| `Ctrl-T` | Go to the top of the file (first line). |
-| `Shift+Ctrl-T` | Go to the end of the file (last line). |
 | `Ctrl-1` | Jump to the first line of the buffer. |
 | `Ctrl-0` | Jump to the last line of the buffer. |
 | `Ctrl-E` then `V` | Enter visual line select mode. The current line is highlighted. Use Up/Down arrows to extend the selection. Press Enter (or `y`) to copy the selected lines to the clipboard. Press `U` to UPPERCASE selected lines. Press `u` to lowercase selected lines. Press `I` to enter multi-line prefix insert (type text + Enter to prepend to every selected line). Press `A` to enter multi-line suffix append (type text + Enter to append to every selected line). Press Escape to cancel. |
@@ -680,6 +678,66 @@ moe supports optional mouse interaction. Mouse capture is **off by default** to 
 
 When mouse capture is on, hold **Shift** (Linux) or **Option** (macOS) while clicking to use native terminal selection for copy/paste.
 
+## WordStar Mode
+
+moe supports classic WordStar key bindings for users who grew up with WordStar, Turbo Pascal, or Borland C++. WordStar mode is **off by default**.
+
+### Enabling WordStar mode
+
+- In the editor: press `Ctrl-B`, type `wordstar on`, press Enter.
+- In config (`~/.config/moe/moe.cnf`): add `set wordstar=on`.
+- Toggle with `Ctrl-B` then `wordstar`.
+
+### Cursor diamond
+
+| Key | Action |
+|---|---|
+| `Ctrl-E` / `Ctrl-X` | Cursor up / down |
+| `Ctrl-S` / `Ctrl-D` | Cursor left / right |
+| `Ctrl-A` / `Ctrl-F` | Word left / right |
+| `Ctrl-R` / `Ctrl-C` | Page up / down |
+
+### Editing keys
+
+| Key | Action |
+|---|---|
+| `Ctrl-G` | Delete character at cursor |
+| `Ctrl-T` | Delete word right |
+| `Ctrl-Y` | Delete entire line |
+| `Ctrl-N` | Insert new line |
+| `Ctrl-U` | Undo |
+| `Ctrl-L` | Find next match |
+| `Ctrl-W` / `Ctrl-Z` | Scroll up / down one line |
+
+### Quick commands (Ctrl-Q prefix)
+
+Press `Ctrl-Q` then a second key:
+
+| Second key | Action |
+|---|---|
+| `S` / `D` | Home / End of line |
+| `R` / `C` | Top / Bottom of file |
+| `F` | Find (opens search prompt) |
+| `A` | Replace (opens replace prompt) |
+| `Y` | Delete to end of line |
+
+### Block/File commands (Ctrl-K prefix)
+
+Press `Ctrl-K` then a second key:
+
+| Second key | Action |
+|---|---|
+| `S` / `Q` / `D` | Save / Quit / Save+Quit |
+| `B` | Start block selection |
+| `V` | Paste below cursor |
+| `Y` | Delete line |
+| `F` | File browser |
+| `U` | Redo |
+
+### Keys unchanged in WordStar mode
+
+`Ctrl-B` (command mode) and `Ctrl-P` (pane switch) work the same in both modes. Arrow keys, Home, End, Page Up/Down, and Escape prefix commands are also unchanged.
+
 ## Configuration
 
 moe reads settings from `~/.config/moe/moe.cnf` on startup. The file uses a vimrc-style format:
@@ -700,6 +758,7 @@ set statusbar=time,weather
 | `theme` | `dark`, `solarized-dark`, `monokai`, `gruvbox`, `nord`, `dracula` | `dark` | Color theme |
 | `linenumbers` | `on`, `off` | `off` | Show line numbers in the gutter |
 | `mouse` | `on`, `off` | `off` | Enable mouse click, drag, and scroll support |
+| `wordstar` | `on`, `off` | `off` | Use classic WordStar key bindings |
 | `city` | Any city name (e.g. `Milan`, `New York`, `Tokyo`) | *(none)* | City used for weather lookups via [wttr.in](https://wttr.in) |
 | `statusbar` | Comma-separated: `time`, `weather` | *(none)* | Extra information to show on the right side of the status bar |
 | `ai-apikey` | OpenAI API key (e.g. `sk-...`) | *(none)* | API key for the AI assistant (`Ctrl-B ai`). Uses the gpt-4o model. |
