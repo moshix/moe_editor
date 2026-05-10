@@ -2,8 +2,8 @@
 
 **moe** is a lightweight, fast terminal text editor written in Go. It runs on Linux and macOS and Windoz, adapts to the terminal window size, supports split-screen editing, syntax highlighting, and a built-in file browser. It also integrates with LLMs so you can do LLM work on terminal-based editor while connect to remote machines. 
 
-This is an editor developed the way my thinking works. It's meant for fast editing of
-Go, C, js, assembly, Java files.
+This is an editor developed the way my fingers and my thinking work. It's meant for fast editing of
+Go, C, js, Java files.
 
 ## Features
 
